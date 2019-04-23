@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 var uniqueValidator = require('mongoose-unique-validator')
+const jwt = require('jsonwebtoken')
 
 const bcrypt = require('bcryptjs')
 
@@ -41,10 +42,25 @@ const userSchema = new mongoose.Schema({
                 throw new Error('Age must be a postive number')
             }
         }
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 })
 
 userSchema.plugin(uniqueValidator)
+
+userSchema.methods.generateAuthToken = async function () {
+    const user = this
+    const token = await jwt.sign({ _id: user._id.toString() }, 'thisisasecret')
+
+    user.tokens = user.tokens.concat({token})
+    await user.save()
+    return token
+}
 
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })

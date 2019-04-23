@@ -1,15 +1,17 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const User = require('../models/user_model')
 const router = new express.Router()
 
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
+    const token = await user.generateAuthToken()
 
     try {
         await user.save((err, user) => {
             if (user) {
-                res.status(201).send(user)
+                res.status(201).send({user, token})
             }
             else {
                 res.status(403).send(err + "User already exists")
@@ -23,7 +25,8 @@ router.post('/users', async (req, res) => {
 router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials( req.body.email, req.body.password )
-        res.send(user)
+        const token = await user.generateAuthToken()
+        res.send({user, token})
     } catch (error) {
         res.status(400).send(error)
 
