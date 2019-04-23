@@ -6,11 +6,12 @@ const router = new express.Router()
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
+    const token = await user.generateAuthToken()
 
     try {
         await user.save((err, user) => {
             if (user) {
-                res.status(201).send(user)
+                res.status(201).send({user, token})
             }
             else {
                 res.status(403).send(err + "User already exists")
