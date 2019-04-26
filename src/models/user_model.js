@@ -6,10 +6,25 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
 const userSchema = new mongoose.Schema({
-    name: {
+    firstName: {
         type: String,
         required: true,
         trim: true
+    },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    phoneNumber: {
+        type: String,
+        required: false,
+        trim: true,
+        validate(value) {
+            if (!validator.isMobilePhone(value)) {
+                throw new Error('Mobile phone number invalid')
+            }
+        }
     },
     email: {
         type: String,
@@ -34,6 +49,16 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
+    company: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    jobTitle: {
+        type: String,
+        required: false,
+        trim: true
+    },
     age: {
         type: Number,
         default: 0,
@@ -43,6 +68,49 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
+    stripeID: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    // address: {
+    //     streetAddress: {
+    //         type: String,
+    //         required: true,
+    //         trim: true
+    //     },
+    //     addressLine2: {
+    //         type: String,
+    //         default: '',
+    //         required: false,
+    //         trim: true
+    //     },
+    //     city: {
+    //         type: String,
+    //         required: true,
+    //         trim: true
+    //     },
+    //     state: {
+    //         type: String,
+    //         required: true,
+    //         trim: true
+    //     },
+    //     zipCode: {
+    //         type: String,
+    //         required: true,
+    //         trim: true,
+    //         validate(value) {
+    //             if (!validator.isPostalCode(value, 'any')) {
+    //                 throw new Error('Invalid Postal code')
+    //             }
+    //         }
+    //     },
+    //     country: {
+    //         type: String,
+    //         required: false,
+    //         trim: true
+    //     },
+    // },
     tokens: [{
         token: {
             type: String,
