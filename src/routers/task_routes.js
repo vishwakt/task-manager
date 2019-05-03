@@ -3,8 +3,10 @@ const Task = require('../models/task_model')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-
-router.post('/tasks', auth, async (req, res) => {
+/**
+ * * POST method to create task
+ */
+router.post('/projects', auth, async (req, res) => {
     // const task = new Task(req.body)
 
     const task = new Task({
@@ -19,17 +21,37 @@ router.post('/tasks', auth, async (req, res) => {
     }
 })
 
-router.get('/tasks', auth, async (req, res) => {
+/**
+ * * GET method to view all tasks
+ * GET /projects?completed=true
+ * GET /projects?limit=10&skip=0
+ */
+router.get('/projects', auth, async (req, res) => {
+    const match = {}
+
+    if (req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
 
     try {
-        const tasks = await Task.find({owner: req.user._id})
-        res.send(tasks)
+        await req.user.populate({
+            path: 'tasks',
+            match,
+            options: {
+                limit: parseInt(req.query.limit)
+            }
+        }).execPopulate()
+        // const tasks = await Task.find({owner: req.user._id})
+        res.send(req.user.tasks)
     } catch (e) {
         res.status(500).send()
     }
 })
 
-router.get('/tasks/:id', auth, async (req, res) => {
+/**
+ * * GET method to view a single task
+ */
+router.get('/projects/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     const task = await Task.findOne({ _id, owner: req.user._id })
@@ -46,7 +68,10 @@ router.get('/tasks/:id', auth, async (req, res) => {
 
 })
 
-router.patch('/tasks/:id', auth, async (req, res) => {
+/**
+ * * PATCH method to update a single task
+ */
+router.patch('/projects/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['description', 'completed']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -75,7 +100,10 @@ router.patch('/tasks/:id', auth, async (req, res) => {
     }
 })
 
-router.delete('/tasks/:id', auth, async (req, res) => {
+/**
+ * * DELETE method to view a single task
+ */
+router.delete('/projects/:id', auth, async (req, res) => {
     try {
         const task = await Task.findByIdAndDelete({_id: req.params.id, owner: req.user._id})
         // const task = await Task.findByIdAndDelete(req.params.id)

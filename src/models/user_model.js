@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 var uniqueValidator = require('mongoose-unique-validator')
 const jwt = require('jsonwebtoken')
+const Task = require('./task_model')
 
 const bcrypt = require('bcryptjs')
 
@@ -117,6 +118,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true
 })
 
 userSchema.plugin(uniqueValidator)
@@ -174,6 +177,16 @@ userSchema.pre('save', async function (next) {
     
     next()
 })
+
+// /**
+//  * Cascade delete user tasks when the user is deleted
+//  */
+// userSchema.pre('remove', async function next() {
+//     const user = this
+//     Task.deleteMany({owner: user._id})
+//
+//     next()
+// })
 
 const User = mongoose.model('Users', userSchema)
 
