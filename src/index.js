@@ -12,9 +12,9 @@ const orderRouter = require('./routers/order_routes')
 
 
 aws.config.update({
-    secretAccessKey: 'g/+jx/X4vANCRgEVJ2TlBN0Zn8z78xLxtNeiYmpm',
-    accessKeyId: 'AKIA5L6FAR2VWNAFUT2A',
-    region: 'us-east-2'
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    region: process.env.AWS_REGION
 });
 
 const app = express()
