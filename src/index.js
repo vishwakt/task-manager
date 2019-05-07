@@ -1,29 +1,69 @@
 const express = require('express')
 const cors = require('cors')
+const aws = require('aws-sdk'); //"^2.2.41"
+const bodyParser = require('body-parser');
+const multer = require('multer'); // "^1.3.0"
+const multerS3 = require('multer-s3'); //"^2.7.0"
 
 require('./db/mongoose')
 const userRouter = require('./routers/user_routes')
 const taskRouter = require('./routers/task_routes')
+const orderRouter = require('./routers/order_routes')
+
+
+aws.config.update({
+    secretAccessKey: 'g/+jx/X4vANCRgEVJ2TlBN0Zn8z78xLxtNeiYmpm',
+    accessKeyId: 'AKIA5L6FAR2VWNAFUT2A',
+    region: 'us-east-2'
+});
 
 const app = express()
+const s3 = new aws.S3();
+
+app.use(bodyParser.json());
+
 const port = process.env.PORT
 
-const multer = require('multer')
-upload = multer({
-    dest:'images'
-})
+// const upload = multer({
+//     dest:'images'
+// })
+//
+// app.post('/upload', upload.single('upload'), (req, res) => {
+//     res.send()
+// })
 
-app.post('/upload', upload.single('upload'), (req, res) => {
-    res.send()
-})
+const upload = multer({
+    storage: multerS3({
+        s3: s3,
+        acl: 'public-read',
+        bucket: 'airworks-file-upload-test',
+        key: function (req, file, cb) {
+            console.log(file);
+            cb(null, file.originalname); //use Date.now() for unique file keys
+        }
+    })
+});
 
+app.post('/uploads3', upload.array('upl',1), async (req, res, next) => {
 
+    res.send("Uploaded!");
+});
 
+// router.post('/users/logoutAll', auth, async (req, res) => {
+//     try {
+//         req.user.tokens = []
+//         await req.user.save()
+//         res.send()
+//     } catch (error) {
+//         res.status(500).send()
+//     }
+// })
 
 app.use(cors())
 app.use(express.json())
 app.use(userRouter)
 app.use(taskRouter)
+app.use(orderRouter)
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)

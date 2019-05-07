@@ -22,7 +22,7 @@ router.post('/projects', auth, async (req, res) => {
 })
 
 /**
- * * GET method to view all tasks
+ * GET method to view all tasks
  * GET /projects?completed=true
  * GET /projects?limit=10&skip=0
  * GET /tasks?sortBy=createdAt:desc
