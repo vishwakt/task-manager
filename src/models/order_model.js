@@ -9,6 +9,11 @@ orderSchema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
+    },
+    costEstimate: {
+        type: String,
+        default: false,
+        trim: true
     }
     // owner: {
     //     type: mongoose.Schema.Types.ObjectId,
