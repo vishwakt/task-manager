@@ -47,7 +47,6 @@ router.get('/projects', auth, async (req, res) => {
             options: {
                 limit: parseInt(req.query.limit),
                 skip: parseInt(req.query.skip)
-                // sort
             }
         }).execPopulate()
         // const tasks = await Task.find({owner: req.user._id})
