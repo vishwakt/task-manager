@@ -10,10 +10,6 @@ const userRouter = require('./routers/user_routes')
 const taskRouter = require('./routers/task_routes')
 const orderRouter = require('./routers/order_routes')
 
-// AWS_SECRET_ACCESS_KEY=PWkYVg3MPYp76nyRsWlnyAYFl2P4eJ6RSjeLIlB1
-// AWS_ACCESS_KEY_ID=AKIA5L6FAR2VQ36JHBGF
-// AWS_REGION=us-east-2
-
 aws.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,

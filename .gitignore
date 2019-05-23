@@ -3,3 +3,7 @@ config
 src/queries
 playground
 src/public
+.DS_Store
+avatars/
+images/
+.gitignore
