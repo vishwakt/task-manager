@@ -20,6 +20,12 @@ taskSchema = new mongoose.Schema({
     timestamps: true
 })
 
+taskSchema.virtual('orders', {
+    ref: 'Orders',
+    localField: '_id',
+    foreignField: 'ownerProject'
+})
+
 const Task_model = mongoose.model('Tasks', taskSchema)
 
 module.exports = Task_model

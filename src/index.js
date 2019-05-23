@@ -1,15 +1,18 @@
 const express = require('express')
 const cors = require('cors')
 const aws = require('aws-sdk'); //"^2.2.41"
-const bodyParser = require('body-parser');
 const multer = require('multer'); // "^1.3.0"
 const multerS3 = require('multer-s3'); //"^2.7.0"
+const bodyParser = require('body-parser');
 
 require('./db/mongoose')
 const userRouter = require('./routers/user_routes')
 const taskRouter = require('./routers/task_routes')
 const orderRouter = require('./routers/order_routes')
 
+// AWS_SECRET_ACCESS_KEY=PWkYVg3MPYp76nyRsWlnyAYFl2P4eJ6RSjeLIlB1
+// AWS_ACCESS_KEY_ID=AKIA5L6FAR2VQ36JHBGF
+// AWS_REGION=us-east-2
 
 aws.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -44,20 +47,10 @@ const upload = multer({
     })
 });
 
-app.post('/uploads3', upload.array('upl',1), async (req, res, next) => {
+app.post('/uploadkml', upload.array('upl',1), async (req, res, next) => {
 
     res.send("Uploaded!");
 });
-
-// router.post('/users/logoutAll', auth, async (req, res) => {
-//     try {
-//         req.user.tokens = []
-//         await req.user.save()
-//         res.send()
-//     } catch (error) {
-//         res.status(500).send()
-//     }
-// })
 
 app.use(cors())
 app.use(express.json())

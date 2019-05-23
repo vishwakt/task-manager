@@ -1,11 +1,6 @@
 const mongoose = require('mongoose')
 
 orderSchema = new mongoose.Schema({
-    description: {
-        type: String,
-        required: true,
-        trim: true
-    },
     completed: {
         type: Boolean,
         default: false
@@ -70,7 +65,7 @@ orderSchema = new mongoose.Schema({
     },
     ownerProject: {
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
+        required: true,
         ref: 'Tasks'
     }
 }, {
